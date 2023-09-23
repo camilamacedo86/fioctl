@@ -65,7 +65,7 @@ func doEdit(cmd *cobra.Command, args []string) {
 	edit.Stdin = os.Stdin
 	logrus.Debug("Running editor and waiting for it to finish...")
 	if err := edit.Run(); err != nil {
-		fmt.Println("Editing cancelled: ", err)
+		logrus.Warning("Editing cancelled: ", err)
 		os.Exit(0)
 	}
 
@@ -75,7 +75,7 @@ func doEdit(cmd *cobra.Command, args []string) {
 		logrus.Error("ERROR: Unable to re-read tempfile:", err)
 	}
 	if bytes.Equal(content, orig) {
-		fmt.Println("No changes found, exiting.")
+		logrus.Infof("No changes found, exiting.")
 		os.Exit(0)
 	}
 

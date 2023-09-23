@@ -258,7 +258,7 @@ func SetUpdatesConfig(opts *SetUpdatesConfigOptions, reportedTag string, reporte
 	}
 
 	if !changed {
-		fmt.Println("No changes found. Device is already configured with the specified options.")
+		logrus.Infof("No changes found. Device is already configured with the specified options.")
 		os.Exit(0)
 	}
 

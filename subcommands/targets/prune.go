@@ -126,7 +126,7 @@ func doPrune(cmd *cobra.Command, args []string) {
 					target_names = append(target_names, names...)
 				}
 			} else {
-				fmt.Println("Nothing to prune")
+				logrus.Infof("Nothing to prune")
 				os.Exit(0)
 			}
 		}

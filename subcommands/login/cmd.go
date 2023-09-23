@@ -81,12 +81,12 @@ func doLogin(cmd *cobra.Command, args []string) {
 	} else if creds.Config.AccessToken == "" {
 		subcommands.DieNotNil(creds.Get())
 	} else {
-		fmt.Println("You are already logged in to Foundries.io services.")
+		logrus.Infof("You are already logged in to Foundries.io services.")
 		os.Exit(0)
 	}
 
 	subcommands.SaveOauthConfig(creds.Config)
-	fmt.Println("You are now logged in to Foundries.io services.")
+	logrus.Infof("You are now logged in to Foundries.io services.")
 }
 
 func promptForCreds(credsUrl string) (string, string) {
