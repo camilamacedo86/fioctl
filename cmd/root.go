@@ -69,6 +69,7 @@ func Execute() {
 }
 
 func init() {
+	logrus.SetFormatter(&logrus.TextFormatter{DisableTimestamp: true})
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is $HOME/.config/fioctl.yaml)")
