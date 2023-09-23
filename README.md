@@ -29,6 +29,8 @@ and `fioctl targets --help`.
 
 ## Building
 
+### To build one binary for development
+
 ~~~sh
 make build  # builds all targets
 
@@ -36,10 +38,24 @@ make build  # builds all targets
 make fioctl-linux-amd64
 make fioctl-darwin-amd64
 make fioctl-windows-amd64
-
-make container-init && make container-build && \
-export PATH=$PATH:`pwd`/bin
 ~~~
+
+### To build all binaries
+
+**Prerequisite**
+- install Gorelease: https://goreleaser.com/install/
+
+Run:
+
+```shell
+goreleaser release --skip=publish --snapshot --clean
+```
+
+Check all binaries into the directory `dist/`
+
+## Releasing
+
+Just push a tag with the next version.
 
 ## Making Changes
 

@@ -1,0 +1,51 @@
+project_name: fioctl
+
+before:
+  hooks:
+    - go mod download
+
+builds:
+  - id: "fioctl"
+    main: ./main.go
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    goarm:
+      - 7
+    flags:
+      - -trimpath
+      - -tags=netgo
+    ldflags:
+      - "-s -w -X github.com/foundriesio/fioctl/subcommands/version.Commit={{.Commit}} -extldflags '-static'"
+    env:
+      - CGO_ENABLED=0
+    binary: fioctl-{{.Os}}-{{.Arch}}
+  - id: "fioctl-windows"
+    main: ./main.go
+    goos:
+      - windows
+    goarch:
+      - amd64
+    flags:
+      - -trimpath
+      - -tags=netgo
+    ldflags:
+      - "-s -w -X github.com/foundriesio/fioctl/subcommands/version.Commit={{.Commit}} -extldflags '-static'"
+    env:
+      - CGO_ENABLED=0
+    binary: fioctl-{{.Os}}-{{.Arch}}
+
+archives:
+  - format: binary
+    name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}"
+    files:
+      - none*
+
+checksum:
+  name_template: 'checksums.txt'
+
+changelog:
+  skip: true

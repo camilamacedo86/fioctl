@@ -30,11 +30,3 @@ check:
 	@test -z $(shell gofmt -l ./ | tee /dev/stderr) || echo "[WARN] Fix formatting issues with 'make format'"
 	@test -x $(linter) || (echo "Please install linter from https://github.com/golangci/golangci-lint/releases/tag/v1.51.2 to $(HOME)/go/bin")
 	$(linter) run
-
-# Use the image for Dockerfile.build to build and install the tool.
-container-init:
-	docker build -t fioctl-build -f Dockerfile.build .
-
-container-build:
-	docker run --rm -ti -v $(shell pwd):/fioctl fioctl-build make build
-
