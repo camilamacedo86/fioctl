@@ -99,7 +99,7 @@ func doPrune(cmd *cobra.Command, args []string) {
 			for _, name := range target_names {
 				parts := strings.SplitN(name, "lmp-", 2)
 				if len(parts) != 2 {
-					logrus.Error("Unable to decode target name: %s\n", name)
+					logrus.Errorf("Unable to decode target name: %s\n", name)
 					os.Exit(1)
 				}
 				custom, _ := api.TargetCustom(targets[name])
