@@ -59,7 +59,7 @@ func (w *WireguardServerConfig) Unmarshall(configVal string) {
 		} else if k == "enabled" {
 			w.Enabled = v != "0"
 		} else {
-			fmt.Println("ERROR: Unexpected client config key: ", k)
+			logrus.Error("ERROR: Unexpected client config key: ", k)
 			os.Exit(1)
 		}
 	}

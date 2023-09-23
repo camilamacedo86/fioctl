@@ -138,7 +138,7 @@ func DieNotNil(err error, message ...string) {
 			parts = append(parts, p)
 		}
 		parts = append(parts, err)
-		fmt.Println(parts...)
+		logrus.Error(parts...)
 		for _, w := range onLastWill {
 			w()
 		}
@@ -177,7 +177,7 @@ func AssertWritable(path string) {
 	DieNotNil(err)
 	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, st.Mode())
 	if err != nil {
-		fmt.Println("ERROR: File is not writeable:", path)
+		logrus.Error("ERROR: File is not writeable:", path)
 		os.Exit(1)
 	}
 	f.Close()

@@ -65,7 +65,7 @@ This is optional.`,
 
 func writeFile(filename, contents string, mode os.FileMode) {
 	if err := os.WriteFile(filename, []byte(contents), mode); err != nil {
-		fmt.Printf("ERROR: Creating %s: %s", filename, err)
+		logrus.Errorf("ERROR: Creating %s: %s", filename, err)
 		os.Exit(1)
 	}
 }
@@ -84,7 +84,7 @@ func doCreateCA(cmd *cobra.Command, args []string) {
 
 	if len(hsmModule) > 0 {
 		if len(hsmPin) == 0 {
-			fmt.Println("ERROR: --hsm-pin is required with --hsm-module")
+			logrus.Error("ERROR: --hsm-pin is required with --hsm-module")
 			os.Exit(1)
 		}
 		os.Setenv("HSM_MODULE", hsmModule)

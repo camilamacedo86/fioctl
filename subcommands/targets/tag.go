@@ -2,6 +2,7 @@ package targets
 
 import (
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"os"
 	"strings"
 
@@ -83,7 +84,7 @@ func doTag(cmd *cobra.Command, args []string) {
 			}
 		}
 		if len(updates) == 0 {
-			fmt.Println("ERROR: no targets found matching the given versions")
+			logrus.Error("ERROR: no targets found matching the given versions")
 			os.Exit(1)
 		}
 	} else {
@@ -100,7 +101,7 @@ func doTag(cmd *cobra.Command, args []string) {
 				}
 				fmt.Printf("Changing tags of %s from %s -> %s\n", name, custom.Tags, targetTags)
 			} else {
-				fmt.Printf("Target(%s) not found in targets.json\n", name)
+				logrus.Errorf("Target(%s) not found in targets.json\n", name)
 				os.Exit(1)
 			}
 		}

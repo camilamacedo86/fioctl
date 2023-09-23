@@ -41,8 +41,8 @@ func validateAppShortlist() {
 	pattern := `^[a-zA-Z0-9-_,]+$`
 	re := regexp.MustCompile(pattern)
 	if len(appsShortlist) > 0 && !re.MatchString(appsShortlist) {
-		fmt.Println("ERROR: Invalid value for apps:", appsShortlist)
-		fmt.Println("       apps must be ", pattern)
+		logrus.Error("ERROR: Invalid value for apps:", appsShortlist)
+		logrus.Error("       apps must be ", pattern)
 		os.Exit(1)
 	}
 }

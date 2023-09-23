@@ -1,7 +1,6 @@
 package secrets
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/cheynewallace/tabby"
@@ -34,7 +33,7 @@ func doList(cmd *cobra.Command, args []string) {
 			t.AddLine(secret.Name)
 		}
 	} else if len(triggers) != 0 {
-		fmt.Println("ERROR: Factory configuration issue. Factory has unexpected number of triggers.")
+		logrus.Error("ERROR: Factory configuration issue. Factory has unexpected number of triggers.")
 		os.Exit(1)
 	}
 	t.Print()

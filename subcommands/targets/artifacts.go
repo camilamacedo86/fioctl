@@ -81,7 +81,7 @@ func (d *DlStatus) Write(p []byte) (int, error) {
 func downloadArtifact(factory string, target int, artifact string) {
 	firstSlash := strings.Index(artifact, "/")
 	if firstSlash < 1 {
-		fmt.Println("ERROR: Invalid artifact path:", artifact)
+		logrus.Error("ERROR: Invalid artifact path:", artifact)
 		os.Exit(1)
 	}
 	run := artifact[0:firstSlash]

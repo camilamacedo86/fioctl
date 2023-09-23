@@ -2,6 +2,7 @@ package version
 
 import (
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"os"
 
 	"github.com/mitchellh/go-homedir"
@@ -76,7 +77,7 @@ func DieNotNil(err error, message ...string) {
 			parts = append(parts, p)
 		}
 		parts = append(parts, err)
-		fmt.Println(parts...)
+		logrus.Error(parts...)
 		os.Exit(1)
 	}
 }
