@@ -81,7 +81,7 @@ func (d *DlStatus) Write(p []byte) (int, error) {
 func downloadArtifact(factory string, target int, artifact string) {
 	firstSlash := strings.Index(artifact, "/")
 	if firstSlash < 1 {
-		fmt.Println("ERROR: Invalid artifact path:", artifact)
+		logrus.Errorf("ERROR: Invalid artifact path:", artifact)
 		os.Exit(1)
 	}
 	run := artifact[0:firstSlash]
@@ -100,11 +100,11 @@ func downloadArtifact(factory string, target int, artifact string) {
 	fmt.Fprintln(os.Stderr)
 	subcommands.DieNotNil(err)
 	if written != resp.ContentLength {
-		fmt.Fprintf(os.Stderr, "ERROR: read %d bytes, expected %d bytes\n", written, resp.ContentLength)
+		logrus.Error(os.Stderr, fmt.Sprintf("ERROR: read %d bytes, expected %d bytes\n", written, resp.ContentLength))
 		os.Exit(1)
 	}
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		fmt.Fprintf(os.Stderr, "ERROR: HTTP response code %d\n", resp.StatusCode)
+		logrus.Error(os.Stderr, fmt.Sprintf("ERROR: HTTP response code %d\n", resp.StatusCode))
 		os.Exit(1)
 	}
 }

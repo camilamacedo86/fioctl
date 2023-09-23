@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -34,7 +35,7 @@ func doGenRstDocs(cmd *cobra.Command, args []string) {
 	rootCmd.DisableAutoGenTag = true
 	err := doc.GenReSTTreeCustom(rootCmd, outDir, filePrepender, linkHandler)
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		logrus.Error("ERROR:", err)
 		os.Exit(1)
 	}
 }
@@ -57,7 +58,7 @@ func doGenMdDocs(cmd *cobra.Command, args []string) {
 	rootCmd.DisableAutoGenTag = true
 	err := doc.GenMarkdownTree(rootCmd, outDir)
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		logrus.Error("ERROR:", err)
 		os.Exit(1)
 	}
 }

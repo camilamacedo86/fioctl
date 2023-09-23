@@ -25,7 +25,7 @@ func doDelete(cmd *cobra.Command, args []string) {
 	for _, name := range args {
 		fmt.Printf("Deleting %s .. ", name)
 		if err := api.DeviceDelete(factory, name); err != nil {
-			fmt.Printf("failed\n%s", err)
+			logrus.Errorf("failed\n%s", err)
 			os.Exit(1)
 		} else {
 			fmt.Printf("ok\n")

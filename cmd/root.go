@@ -63,7 +63,7 @@ func Execute() {
 	}
 
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		logrus.Error(err)
 		os.Exit(1)
 	}
 }
@@ -103,12 +103,12 @@ func init() {
 func getConfigDir() string {
 	config, err := homedir.Expand("~/.config")
 	if err != nil {
-		fmt.Println(err)
+		logrus.Error(err)
 		os.Exit(1)
 	}
 	if _, err := os.Stat(config); errors.Is(err, fs.ErrNotExist) {
 		if err := os.Mkdir(config, 0755); err != nil {
-			fmt.Println(err)
+			logrus.Error(err)
 			os.Exit(1)
 		}
 	}
@@ -137,7 +137,7 @@ func initConfig() {
 			logrus.Debug("Config file not found")
 		} else {
 			// Config file was found but another error was produced
-			fmt.Println("ERROR: ", err)
+			logrus.Error("ERROR: ", err)
 			os.Exit(1)
 		}
 	}
