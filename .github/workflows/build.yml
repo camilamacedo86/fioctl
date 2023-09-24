@@ -37,8 +37,6 @@ jobs:
           - os: windows-latest
             binary: fioctl-windows-amd64.exe
           - os: macos-latest
-            binary: fioctl-darwin-amd64
-          - os: macos-latest
             binary: fioctl-darwin-arm64
     runs-on: ${{ matrix.os }}
     steps:
