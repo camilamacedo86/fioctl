@@ -74,9 +74,14 @@ jobs:
 
       - name: Test Binary
         run: |
+          $output = ""
           if ($env:RUNNER_OS -eq "Windows") {
-            .\bin\${{ matrix.binary }} logout
+            $output = .\bin\${{ matrix.binary }} targets list 2>&1
           } else {
-            ./bin/${{ matrix.binary }} logout
+            $output = ./bin/${{ matrix.binary }} targets list 2>&1
+          }
+          if ($output -notmatch "ERROR: Please run: \"fioctl login\" first") {
+            throw "Unexpected output: $output"
           }
         shell: pwsh
+
