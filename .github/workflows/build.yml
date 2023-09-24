@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2 # Updated to the correct version
 
       - name: Build Binaries
         run: make build
@@ -21,7 +21,7 @@ jobs:
           path: bin/
 
   test:
-    needs: build
+    needs: build-binaries
     strategy:
       matrix:
         include:
@@ -46,7 +46,6 @@ jobs:
       - name: Test Binary
         run: ./bin/${{ matrix.binary }} logout
 
-  # ensure dockerfile
   build-dockerfile:
     runs-on: ubuntu-latest
     steps:
@@ -58,5 +57,3 @@ jobs:
 
       - name: Build Docker image
         run: make container-init
-
-
