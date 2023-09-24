@@ -92,6 +92,8 @@ jobs:
         run: |
           if ($env:RUNNER_OS -eq "Windows") {
             .\bin\${{ matrix.binary }} logout
+          } elseif (${{ matrix.qemu }}) {
+            qemu-${{ matrix.qemu-platform }} ./bin/${{ matrix.binary }} logout
           } else {
             ./bin/${{ matrix.binary }} logout
           }
@@ -99,14 +101,12 @@ jobs:
 
       - name: Should fail with ERROR outputted
         run: |
-          if ($env:RUNNER_OS -eq "Windows") {
-            .\bin\${{ matrix.binary }} logout
-          } else {
-            ./bin/${{ matrix.binary }} logout
-          }
           $output = ""
           if ($env:RUNNER_OS -eq "Windows") {
             $output = .\bin\${{ matrix.binary }} targets list 2>&1
+            $exitCode = $LASTEXITCODE
+          } elseif (${{ matrix.qemu }}) {
+            $output = qemu-${{ matrix.qemu-platform }} ./bin/${{ matrix.binary }} targets list 2>&1
             $exitCode = $LASTEXITCODE
           } else {
             $output = ./bin/${{ matrix.binary }} targets list 2>&1
@@ -119,6 +119,7 @@ jobs:
             Write-Error "Unexpected output or exit code: $output, Exit Code: $exitCode"
           }
         shell: pwsh
+      
 
 
 
