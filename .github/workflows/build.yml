@@ -16,16 +16,13 @@ jobs:
           make container-init
 
       - name: Run Container to Build Binaries
-        run: docker run --rm -v $(pwd):/fioctl fioctl-build make build
-
-      - name: Copy Binaries from Container
         run: |
-          container_id=$(docker create fioctl-build)
-          docker cp $container_id:/fioctl/bin ./bin
-          docker rm $container_id
+          docker run --rm -v $(pwd):/fioctl fioctl-build sh -c "git config --global --add safe.directory /fioctl && make build"
+
+      # Binaries are already in the ./bin directory, no need to copy
 
       - name: Archive Binaries
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: binaries
           path: bin/
