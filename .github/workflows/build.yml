@@ -74,7 +74,7 @@ jobs:
 
       - name: Test Binary
         if: runner.os == 'Windows'
-        run: .\bin\${{ matrix.binary }} logout
+        run: .\bin\fioctl_windows_amd64\fioctl-windows-amd64.exe logout
         shell: pwsh
 
       - name: Test Binary
