@@ -16,7 +16,7 @@ jobs:
             qemu: true
             qemu-platform: arm64
           - os: windows-latest
-            binary: fioctl-windows-amd64
+            binary: fioctl-windows-amd64.exe
           - os: macos-latest
             binary: fioctl-darwin-amd64
     runs-on: ${{ matrix.os }}
@@ -26,17 +26,12 @@ jobs:
 
       - name: Set up QEMU
         if: matrix.qemu
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
         with:
           platforms: ${{ matrix.qemu-platform }}
 
-      - name: Build Binary (Non-Windows)
-        if: matrix.binary != 'fioctl-windows-amd64'
-        run: make ${{ matrix.binary }}
-
-      - name: Build Binary (Windows)
-        if: matrix.binary == 'fioctl-windows-amd64'
-        run: make fioctl-windows-amd64
+      - name: Build Binary
+        run: make ${{ matrix.binary == 'fioctl-windows-amd64.exe' && 'fioctl-windows-amd64' || matrix.binary }}
 
       - name: Archive Binaries
         uses: actions/upload-artifact@v2
@@ -56,7 +51,7 @@ jobs:
             qemu: true
             qemu-platform: arm64
           - os: windows-latest
-            binary: fioctl-windows-amd64
+            binary: fioctl-windows-amd64.exe
           - os: macos-latest
             binary: fioctl-darwin-amd64
     runs-on: ${{ matrix.os }}
@@ -80,7 +75,7 @@ jobs:
       - name: Test Binary
         run: |
           if ($env:RUNNER_OS -eq "Windows") {
-            .\bin\${{ matrix.binary }}.exe logout
+            .\bin\${{ matrix.binary }} logout
           } else {
             ./bin/${{ matrix.binary }} logout
           }
