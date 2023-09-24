@@ -21,6 +21,8 @@ jobs:
             binary: fioctl-darwin-amd64
           - os: macos-latest
             binary: fioctl-darwin-arm64
+            qemu: true
+            qemu-platform: arm64
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
