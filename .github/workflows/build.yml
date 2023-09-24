@@ -78,4 +78,10 @@ jobs:
         if: runner.os != 'Windows'
 
       - name: Test Binary
-        run: ./bin/${{ matrix.binary }} logout
+        run: |
+          if (${{ runner.os }} -eq 'Windows') {
+            & .\bin\${{ matrix.binary }}.exe logout
+          } else {
+            ./bin/${{ matrix.binary }} logout
+          }
+
