@@ -40,10 +40,6 @@ jobs:
             binary: fioctl-linux-arm64
             qemu: true
             qemu-platform: arm64
-          - os: ubuntu-latest
-            binary: fioctl-linux-armv7
-            qemu: true
-            qemu-platform: arm
           - os: windows-latest
             binary: fioctl-windows-amd64.exe
           - os: macos-latest
