@@ -1,0 +1,126 @@
+name: Binaries Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-binaries:
+    name: Build ${{ matrix.binary }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            binary: fioctl-linux-amd64
+          - os: ubuntu-latest
+            binary: fioctl-linux-arm64
+            qemu: true
+            qemu-platform: arm64
+          # Let's build on the ubuntu to be faster
+          - os: ubuntu-latest
+            binary: fioctl-windows-amd64.exe
+          - os: macos-latest
+            binary: fioctl-darwin-amd64
+          - os: ubuntu-latest
+            binary: fioctl-linux-armv7
+            qemu: true
+            qemu-platform: linux/arm/v7
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        if: matrix.qemu
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: ${{ matrix.qemu-platform }}
+
+      - name: Build Binary
+        run: |
+          if [ "${{ matrix.binary }}" == "fioctl-windows-amd64.exe" ]; then
+            make fioctl-windows-amd64
+          else
+            make ${{ matrix.binary }}
+          fi
+
+      - name: Archive Binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: bin/${{ matrix.binary }}
+
+  test:
+    needs: build-binaries
+    name: Check ${{ matrix.binary }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            binary: fioctl-linux-amd64
+          - os: ubuntu-latest
+            binary: fioctl-linux-arm64
+            qemu: true
+            qemu-platform: aarch64
+          - os: windows-latest
+            binary: fioctl-windows-amd64.exe
+          - os: macos-latest
+            binary: fioctl-darwin-amd64
+          - os: ubuntu-latest
+            binary: fioctl-linux-armv7
+            qemu: true
+            qemu-platform: arm
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up QEMU
+        if: matrix.qemu
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: ${{ matrix.qemu-platform }}
+
+      - name: Download Binaries
+        uses: actions/download-artifact@v2
+        with:
+          name: binaries
+          path: bin/
+
+      - name: Set Execute Permission
+        if: runner.os != 'Windows'
+        run: chmod +x ./bin/${{ matrix.binary }}
+
+      - name: Install QEMU user static
+        if: matrix.qemu
+        run: sudo apt-get update && sudo apt-get install -y qemu-user-static
+        shell: bash
+
+      - name: Should run successfully
+        run: |
+          if ($env:RUNNER_OS -eq "Windows") {
+            .\bin\${{ matrix.binary }} logout
+          } elseif ("${{ matrix.qemu }}" -eq "true") {
+            qemu-${{ matrix.qemu-platform }}-static ./bin/${{ matrix.binary }} logout
+          } else {
+            ./bin/${{ matrix.binary }} logout
+          }
+        shell: pwsh
+
+      - name: Should fail with ERROR outputted
+        run: |
+          $output = ""
+          if ($env:RUNNER_OS -eq "Windows") {
+            $output = .\bin\${{ matrix.binary }} targets list 2>&1
+            $exitCode = $LASTEXITCODE
+          } elseif ("${{ matrix.qemu }}" -eq "true") {
+            $output = qemu-${{ matrix.qemu-platform }}-static ./bin/${{ matrix.binary }} targets list 2>&1
+            $exitCode = $LASTEXITCODE
+          } else {
+            $output = ./bin/${{ matrix.binary }} targets list 2>&1
+            $exitCode = $LASTEXITCODE
+          }
+          if ($exitCode -eq 1 -and $output -match 'ERROR: Please run: "fioctl login" first') {
+            Write-Host "Expected error occurred"
+            $host.SetShouldExit(0)
+          } else {
+            Write-Error "Unexpected output or exit code: $output, Exit Code: $exitCode"
+          }
+        shell: pwsh
