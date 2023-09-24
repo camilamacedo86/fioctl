@@ -98,7 +98,7 @@ jobs:
           if ($env:RUNNER_OS -eq "Windows") {
             .\bin\${{ matrix.binary }} logout
           } elseif ("${{ matrix.qemu }}" -eq "true") {
-            qemu-${{ matrix.qemu-platform }} ./bin/${{ matrix.binary }} logout
+            qemu-${{ matrix.qemu-platform }}-static ./bin/${{ matrix.binary }} logout
           } else {
             ./bin/${{ matrix.binary }} logout
           }
@@ -111,7 +111,7 @@ jobs:
             $output = .\bin\${{ matrix.binary }} targets list 2>&1
             $exitCode = $LASTEXITCODE
           } elseif ("${{ matrix.qemu }}" -eq "true") {
-            $output = qemu-${{ matrix.qemu-platform }} ./bin/${{ matrix.binary }} targets list 2>&1
+            $output = qemu-${{ matrix.qemu-platform }}-static ./bin/${{ matrix.binary }} targets list 2>&1
             $exitCode = $LASTEXITCODE
           } else {
             $output = ./bin/${{ matrix.binary }} targets list 2>&1
