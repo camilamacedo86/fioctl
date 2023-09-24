@@ -11,9 +11,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: all
+
       - name: Build Container
-        run: |
-          make container-init
+        run: make container-init
 
       - name: Run Container to Build Binaries
         run: |
@@ -36,8 +40,17 @@ jobs:
             binary: fioctl-windows-amd64.exe
           - os: macos-latest
             binary: fioctl-darwin-amd64
+          - os: ubuntu-latest
+            binary: fioctl-linux-arm64
+            qemu: true
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Set up QEMU
+        if: matrix.qemu
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: arm64
+
       - name: Download Binaries
         uses: actions/download-artifact@v2
         with:
