@@ -6,31 +6,6 @@ on:
 
 jobs:
   build-binaries:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-        with:
-          platforms: all
-
-      - name: Build Container
-        run: make container-init
-
-      - name: Run Container to Build Binaries
-        run: |
-          docker run --rm -v $(pwd):/fioctl fioctl-build sh -c "git config --global --add safe.directory /fioctl && make build"
-
-      - name: Archive Binaries
-        uses: actions/upload-artifact@v2
-        with:
-          name: binaries
-          path: bin/
-
-  test:
-    needs: build-binaries
     strategy:
       matrix:
         include:
@@ -48,12 +23,31 @@ jobs:
             binary: fioctl-darwin-arm64
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Set up QEMU
         if: matrix.qemu
         uses: docker/setup-qemu-action@v1
         with:
           platforms: ${{ matrix.qemu-platform }}
 
+      - name: Build Binary
+        run: make build-${{ matrix.binary }}
+
+      - name: Archive Binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: bin/${{ matrix.binary }}
+
+  test:
+    needs: build-binaries
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
       - name: Download Binaries
         uses: actions/download-artifact@v2
         with:
@@ -61,8 +55,8 @@ jobs:
           path: bin/
 
       - name: Set Execute Permission
-        run: chmod +x ./bin/${{ matrix.binary }}
+        run: chmod +x ./bin/*
         if: runner.os != 'Windows'
 
       - name: Test Binary
-        run: ./bin/${{ matrix.binary }} logout
+        run: ./bin/* logout
