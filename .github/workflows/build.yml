@@ -6,6 +6,7 @@ on:
 
 jobs:
   build-binaries:
+    name: Build ${{ matrix.binary }}
     strategy:
       matrix:
         include:
@@ -15,7 +16,8 @@ jobs:
             binary: fioctl-linux-arm64
             qemu: true
             qemu-platform: arm64
-          - os: windows-latest
+          # Let's build on the ubuntu to be faster
+          - os: ubuntu-latest
             binary: fioctl-windows-amd64.exe
           - os: macos-latest
             binary: fioctl-darwin-amd64
@@ -35,7 +37,12 @@ jobs:
           platforms: ${{ matrix.qemu-platform }}
 
       - name: Build Binary
-        run: make ${{ matrix.binary == 'fioctl-windows-amd64.exe' && 'fioctl-windows-amd64' || matrix.binary }}
+        run: |
+          if [ "${{ matrix.binary }}" == "fioctl-windows-amd64.exe" ]; then
+            make fioctl-windows-amd64
+          else
+            make ${{ matrix.binary }}
+          fi
 
       - name: Archive Binaries
         uses: actions/upload-artifact@v2
@@ -45,6 +52,7 @@ jobs:
 
   test:
     needs: build-binaries
+    name: Check ${{ matrix.binary }}
     strategy:
       matrix:
         include:
@@ -92,4 +100,5 @@ jobs:
             throw "Unexpected output: $output"
           }
         shell: pwsh
+      
 
