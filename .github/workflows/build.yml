@@ -14,7 +14,9 @@ jobs:
       - name: Build Container
         run: |
           make container-init
-          make container-build
+
+      - name: Run Container to Build Binaries
+        run: docker run --rm -v $(pwd):/fioctl fioctl-build make build
 
       - name: Copy Binaries from Container
         run: |
