@@ -19,6 +19,10 @@ jobs:
             binary: fioctl-windows-amd64.exe
           - os: macos-latest
             binary: fioctl-darwin-amd64
+          - os: ubuntu-latest
+            binary: fioctl-linux-armv7
+            qemu: true
+            qemu-platform: armv7
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
@@ -54,6 +58,10 @@ jobs:
             binary: fioctl-windows-amd64.exe
           - os: macos-latest
             binary: fioctl-darwin-amd64
+          - os: ubuntu-latest
+            binary: fioctl-linux-armv7
+            qemu: true
+            qemu-platform: armv7
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up QEMU
