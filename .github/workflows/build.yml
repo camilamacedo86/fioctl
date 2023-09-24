@@ -15,14 +15,10 @@ jobs:
             binary: fioctl-linux-arm64
             qemu: true
             qemu-platform: arm64
-          - os: windows-latest
-            binary: fioctl-windows-amd64.exe
+          - os: ubuntu-latest
+            binary: fioctl-windows-amd64
           - os: macos-latest
             binary: fioctl-darwin-amd64
-          - os: macos-latest
-            binary: fioctl-darwin-arm64
-            qemu: true
-            qemu-platform: arm64
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
@@ -34,8 +30,13 @@ jobs:
         with:
           platforms: ${{ matrix.qemu-platform }}
 
-      - name: Build Binary
+      - name: Build Binary (Non-Windows)
+        if: matrix.binary != 'fioctl-windows-amd64'
         run: make ${{ matrix.binary }}
+
+      - name: Build Binary (Windows)
+        if: matrix.binary == 'fioctl-windows-amd64'
+        run: make fioctl-windows-amd64
 
       - name: Archive Binaries
         uses: actions/upload-artifact@v2
@@ -45,11 +46,27 @@ jobs:
 
   test:
     needs: build-binaries
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            binary: fioctl-linux-amd64
+          - os: ubuntu-latest
+            binary: fioctl-linux-arm64
+            qemu: true
+            qemu-platform: arm64
+          - os: windows-latest
+            binary: fioctl-windows-amd64
+          - os: macos-latest
+            binary: fioctl-darwin-amd64
+    runs-on: ${{ matrix.os }}
     steps:
+      - name: Set up QEMU
+        if: matrix.qemu
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: ${{ matrix.qemu-platform }}
+
       - name: Download Binaries
         uses: actions/download-artifact@v2
         with:
@@ -57,8 +74,8 @@ jobs:
           path: bin/
 
       - name: Set Execute Permission
-        run: chmod +x ./bin/*
+        run: chmod +x ./bin/${{ matrix.binary }}
         if: runner.os != 'Windows'
 
       - name: Test Binary
-        run: ./bin/* logout
+        run: ./bin/${{ matrix.binary }} logout
