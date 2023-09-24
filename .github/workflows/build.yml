@@ -5,11 +5,58 @@ on:
   pull_request:
 
 jobs:
-  build:
+  build-binaries:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Binaries
+        run: make build
+
+      - name: Archive Binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: bin/
+
+  test:
+    needs: build
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            binary: fioctl-linux-amd64
+          - os: windows-latest
+            binary: fioctl-windows-amd64.exe
+          - os: macos-latest
+            binary: fioctl-darwin-arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Download Binaries
+        uses: actions/download-artifact@v2
+        with:
+          name: binaries
+          path: bin/
+
+      - name: Set Execute Permission
+        run: chmod +x ./bin/${{ matrix.binary }}
+        if: runner.os != 'Windows'
+
+      - name: Test Binary
+        run: ./bin/${{ matrix.binary }} logout
+
+  # ensure dockerfile
+  build-dockerfile:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
-        uses: make build
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: make container-init
+
+
