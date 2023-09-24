@@ -27,6 +27,7 @@ jobs:
 
   test:
     needs: build-binaries
+    name: Check ${{ matrix.binary }}
     strategy:
       matrix:
         include:
