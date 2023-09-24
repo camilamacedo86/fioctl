@@ -88,7 +88,7 @@ jobs:
         if: runner.os != 'Windows'
         run: chmod +x ./bin/${{ matrix.binary }}
 
-      - name: Test Binary
+      - name: Should run successfully
         run: |
           if ($env:RUNNER_OS -eq "Windows") {
             .\bin\${{ matrix.binary }} logout
@@ -97,8 +97,13 @@ jobs:
           }
         shell: pwsh
 
-      - name: Test Binary
+      - name: Should fail with ERROR outputted
         run: |
+          if ($env:RUNNER_OS -eq "Windows") {
+            .\bin\${{ matrix.binary }} logout
+          } else {
+            ./bin/${{ matrix.binary }} logout
+          }
           $output = ""
           if ($env:RUNNER_OS -eq "Windows") {
             $output = .\bin\${{ matrix.binary }} targets list 2>&1
@@ -109,11 +114,13 @@ jobs:
           }
           if ($exitCode -eq 1 -and $output -match 'ERROR: Please run: "fioctl login" first') {
             Write-Host "Expected error occurred"
+            $host.SetShouldExit(0)
           } else {
-            throw "Unexpected output or exit code: $output, Exit Code: $exitCode"
+            Write-Error "Unexpected output or exit code: $output, Exit Code: $exitCode"
           }
         shell: pwsh
-      
+
+
 
 
 
