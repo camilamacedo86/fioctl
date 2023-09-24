@@ -24,7 +24,7 @@ jobs:
           - os: ubuntu-latest
             binary: fioctl-linux-armv7
             qemu: true
-            qemu-platform: armv7
+            qemu-platform: linux/arm/v7
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
@@ -61,7 +61,7 @@ jobs:
           - os: ubuntu-latest
             binary: fioctl-linux-arm64
             qemu: true
-            qemu-platform: arm64
+            qemu-platform: aarch64
           - os: windows-latest
             binary: fioctl-windows-amd64.exe
           - os: macos-latest
@@ -69,7 +69,7 @@ jobs:
           - os: ubuntu-latest
             binary: fioctl-linux-armv7
             qemu: true
-            qemu-platform: armv7
+            qemu-platform: arm
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up QEMU
@@ -87,6 +87,11 @@ jobs:
       - name: Set Execute Permission
         if: runner.os != 'Windows'
         run: chmod +x ./bin/${{ matrix.binary }}
+
+      - name: Install QEMU user static
+        if: matrix.qemu
+        run: sudo apt-get update && sudo apt-get install -y qemu-user-static
+        shell: bash
 
       - name: Should run successfully
         run: |
