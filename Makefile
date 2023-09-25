@@ -24,12 +24,6 @@ fioctl-%:
 		go build $(LDFLAGS) -o bin/$@ main.go
 	@if [ "$@" = "fioctl-windows-amd64" ]; then mv bin/$@ bin/$@.exe; fi
 
-fioctl-linux-armv7:
-	CGO_ENABLED=0 \
-	GOOS=linux \
-	GOARCH=arm \
-	GOARM=7 \
-		go build $(LDFLAGS) -o bin/$@ main.go
 format:
 	@gofmt -l  -w ./
 check:
