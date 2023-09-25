@@ -5,46 +5,33 @@ on:
   pull_request:
 
 jobs:
-  build-binaries:
-    name: Build ${{ matrix.binary }}
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            binary: fioctl-linux-amd64
-          - os: ubuntu-latest
-            binary: fioctl-linux-arm64
-            qemu: true
-            qemu-platform: arm64
-          # Let's build on the ubuntu to be faster
-          - os: ubuntu-latest
-            binary: fioctl-windows-amd64.exe
-          - os: macos-latest
-            binary: fioctl-darwin-amd64
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  name: Binaries Build
 
-      - name: Set up QEMU
-        if: matrix.qemu
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: ${{ matrix.qemu-platform }}
+  on:
+    push:
+    pull_request:
 
-      - name: Build Binary
-        run: |
-          if [ "${{ matrix.binary }}" == "fioctl-windows-amd64.exe" ]; then
-            make fioctl-windows-amd64
-          else
-            make ${{ matrix.binary }}
-          fi
+  jobs:
+    build-binaries:
+      name: Build Binaries
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
 
-      - name: Archive Binaries
-        uses: actions/upload-artifact@v2
-        with:
-          name: binaries
-          path: bin/${{ matrix.binary }}
+        - name: Set up Go
+          uses: actions/setup-go@v2
+          with:
+            go-version: '~1.19'
+
+        - name: Build All Binaries
+          run: make
+
+        - name: Archive Binaries
+          uses: actions/upload-artifact@v2
+          with:
+            name: binaries
+            path: bin/
 
   test:
     needs: build-binaries
