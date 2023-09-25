@@ -60,14 +60,11 @@ jobs:
         if: runner.os != 'Windows'
         run: chmod +x ./bin/${{ matrix.binary }}
 
-      - name: Should run successfully
+      - name: Verify binary
         run: |
-          if ($env:RUNNER_OS -eq "Windows") {
-            .\bin\${{ matrix.binary }} logout
-          } elseif ("${{ matrix.qemu }}" -eq "true") {
+          if ("${{ matrix.qemu }}" -eq "true") {
             qemu-${{ matrix.qemu-platform }}-static ./bin/${{ matrix.binary }} logout
           } else {
             ./bin/${{ matrix.binary }} logout
           }
         shell: pwsh
-        
