@@ -5,33 +5,26 @@ on:
   pull_request:
 
 jobs:
-  name: Binaries Build
+  build-binaries:
+    name: Build Binaries
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  on:
-    push:
-    pull_request:
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '~1.19'
 
-  jobs:
-    build-binaries:
-      name: Build Binaries
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
+      - name: Build All Binaries
+        run: make
 
-        - name: Set up Go
-          uses: actions/setup-go@v2
-          with:
-            go-version: '~1.19'
-
-        - name: Build All Binaries
-          run: make
-
-        - name: Archive Binaries
-          uses: actions/upload-artifact@v2
-          with:
-            name: binaries
-            path: bin/
+      - name: Archive Binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: bin/
 
   test:
     needs: build-binaries
@@ -94,7 +87,7 @@ jobs:
             $exitCode = $LASTEXITCODE
           } else {
             $output = ./bin/${{ matrix.binary }} targets list 2>&1
-            $exitCode = $LASTEXITCODE
+            $exitCode = $LASTEXIT_CODE
           }
           if ($exitCode -eq 1 -and $output -match 'ERROR: Please run: "fioctl login" first') {
             Write-Host "Expected error occurred"
