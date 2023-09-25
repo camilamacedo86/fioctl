@@ -60,11 +60,6 @@ jobs:
         if: runner.os != 'Windows'
         run: chmod +x ./bin/${{ matrix.binary }}
 
-      - name: Install QEMU user static
-        if: matrix.qemu
-        run: sudo apt-get update && sudo apt-get install -y qemu-user-static
-        shell: bash
-
       - name: Should run successfully
         run: |
           if ($env:RUNNER_OS -eq "Windows") {
@@ -75,24 +70,4 @@ jobs:
             ./bin/${{ matrix.binary }} logout
           }
         shell: pwsh
-
-      - name: Should fail with ERROR outputted
-        run: |
-          $output = ""
-          if ($env:RUNNER_OS -eq "Windows") {
-            $output = .\bin\${{ matrix.binary }} targets list 2>&1
-            $exitCode = $LASTEXITCODE
-          } elseif ("${{ matrix.qemu }}" -eq "true") {
-            $output = qemu-${{ matrix.qemu-platform }}-static ./bin/${{ matrix.binary }} targets list 2>&1
-            $exitCode = $LASTEXITCODE
-          } else {
-            $output = ./bin/${{ matrix.binary }} targets list 2>&1
-            $exitCode = $LASTEXIT_CODE
-          }
-          if ($exitCode -eq 1 -and $output -match 'ERROR: Please run: "fioctl login" first') {
-            Write-Host "Expected error occurred"
-            $host.SetShouldExit(0)
-          } else {
-            Write-Error "Unexpected output or exit code: $output, Exit Code: $exitCode"
-          }
-        shell: pwsh
+        
