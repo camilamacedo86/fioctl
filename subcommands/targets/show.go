@@ -175,7 +175,7 @@ func doShowComposeApp(cmd *cobra.Command, args []string) {
 			logrus.Error("Error:\n\t", appInfo.Error)
 		}
 		if appInfo.Warnings != nil {
-			logrus.Warning("Warnings:")
+			logger.Log(logger.Warning, "Warnings:")
 			for _, warn := range appInfo.Warnings {
 				fmt.Println("\t", warn)
 			}

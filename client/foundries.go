@@ -534,7 +534,7 @@ func NewApiClient(serverUrl string, config Config, caCertPath string, version st
 		}
 
 		if ok := rootCAs.AppendCertsFromPEM(certs); !ok {
-			logrus.Warning("No certs appended, using system certs only")
+			logger.Log(logger.Warning, "No certs appended, using system certs only")
 		}
 		tlsCfg.RootCAs = rootCAs
 	}
