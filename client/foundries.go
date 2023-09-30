@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/foundriesio/fioctl/logger"
 	"io"
 	"net/http"
 	"os"

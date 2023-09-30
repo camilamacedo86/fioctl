@@ -1,6 +1,7 @@
 package devices
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -22,7 +23,7 @@ func doRename(cmd *cobra.Command, args []string) {
 	logrus.Debugf("Renaming %s -> %s", args[0], args[1])
 
 	if err := api.DeviceRename(factory, args[0], args[1]); err != nil {
-		logrus.Errorf("failed\n%s", err)
+		fmt.Printf("failed\n%s", err)
 		os.Exit(1)
 	}
 }

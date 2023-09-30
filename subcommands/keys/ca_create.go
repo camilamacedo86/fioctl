@@ -2,6 +2,7 @@ package keys
 
 import (
 	"fmt"
+	"github.com/foundriesio/fioctl/logger"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -65,7 +66,7 @@ This is optional.`,
 
 func writeFile(filename, contents string, mode os.FileMode) {
 	if err := os.WriteFile(filename, []byte(contents), mode); err != nil {
-		logrus.Errorf("ERROR: Creating %s: %s", filename, err)
+		logger.Logf(logger.Error, "ERROR: Creating %s: %s", filename, err)
 		os.Exit(1)
 	}
 }

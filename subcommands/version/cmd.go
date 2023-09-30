@@ -2,6 +2,7 @@ package version
 
 import (
 	"fmt"
+	"github.com/foundriesio/fioctl/logger"
 	"os"
 
 	"github.com/mitchellh/go-homedir"

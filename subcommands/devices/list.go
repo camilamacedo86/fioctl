@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/cheynewallace/tabby"
+	"github.com/foundriesio/fioctl/logger"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -54,7 +55,7 @@ func ownerFormatter(d *client.Device) string {
 	logrus.Debugf("Looking up user %s in factory %s", d.Owner, d.Factory)
 	users, err := api.UsersList(d.Factory)
 	if err != nil {
-		logrus.Errorf("Unable to look up users: %s", err)
+		logger.Logf(logger.Error, "Unable to look up users: %s", err)
 		return "???"
 	}
 	id := "<not in factory: " + d.Factory + ">"

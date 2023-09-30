@@ -3,6 +3,7 @@ package login
 import (
 	"bufio"
 	"fmt"
+	"github.com/foundriesio/fioctl/logger"
 	"net/url"
 	"os"
 	"strings"

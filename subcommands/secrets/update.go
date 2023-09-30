@@ -1,6 +1,7 @@
 package secrets
 
 import (
+	"github.com/foundriesio/fioctl/logger"
 	"os"
 	"strings"
 

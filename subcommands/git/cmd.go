@@ -3,6 +3,7 @@ package git
 import (
 	"bufio"
 	"fmt"
+	"github.com/foundriesio/fioctl/logger"
 	"os"
 	"os/exec"
 	"os/user"

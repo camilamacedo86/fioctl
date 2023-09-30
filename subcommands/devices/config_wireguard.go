@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/foundriesio/fioctl/client"
+	"github.com/foundriesio/fioctl/logger"
 	"github.com/foundriesio/fioctl/subcommands"
 	"github.com/foundriesio/fioctl/subcommands/config"
 )
@@ -94,7 +95,7 @@ func factoryIps(factory string) map[uint32]bool {
 	for _, item := range ipList {
 		ip, err := ipToUint32(item.Ip)
 		if err != nil {
-			logrus.Errorf("Unable to compute VPN Address for %s - %s", item.Name, item.Ip)
+			logger.Logf(logger.Error, "Unable to compute VPN Address for %s - %s", item.Name, item.Ip)
 		} else {
 			ips[ip] = true
 		}
@@ -144,7 +145,7 @@ func doConfigWireguard(cmd *cobra.Command, args []string) {
 		}
 		os.Exit(0)
 	} else if args[1] != "enable" && args[1] != "disable" {
-		logrus.Errorf("Invalid argument: '%s'. Must be 'enable' or 'disable'\n", args[1])
+		logger.Logf(logger.Error, "Invalid argument: '%s'. Must be 'enable' or 'disable'\n", args[1])
 		os.Exit(0)
 	}
 

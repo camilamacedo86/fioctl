@@ -2,7 +2,7 @@ package targets
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
+	"github.com/foundriesio/fioctl/logger"
 	"os"
 	"sort"
 	"strconv"
@@ -99,7 +99,7 @@ func doPrune(cmd *cobra.Command, args []string) {
 			for _, name := range target_names {
 				parts := strings.SplitN(name, "lmp-", 2)
 				if len(parts) != 2 {
-					logrus.Errorf("Unable to decode target name: %s\n", name)
+					logger.Logf(logger.Error, "Unable to decode target name: %s\n", name)
 					os.Exit(1)
 				}
 				custom, _ := api.TargetCustom(targets[name])
@@ -133,7 +133,7 @@ func doPrune(cmd *cobra.Command, args []string) {
 	} else {
 		for _, name := range args {
 			if _, ok := targets[name]; !ok {
-				logrus.Errorf("Target(%s) not found in targets.json\n", name)
+				logger.Logf(logger.Error, "Target(%s) not found in targets.json\n", name)
 				os.Exit(1)
 			}
 		}

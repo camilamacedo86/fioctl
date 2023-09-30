@@ -19,7 +19,17 @@ const (
 	Error
 )
 
-func Log(level Level, message string) {
+func Log(level Level, v ...interface{}) {
+	message := fmt.Sprint(v...)
+	printColored(level, message)
+}
+
+func Logf(level Level, format string, v ...interface{}) {
+	message := fmt.Sprintf(format, v...)
+	printColored(level, message)
+}
+
+func printColored(level Level, message string) {
 	switch level {
 	case Info:
 		fmt.Println(blue + message + reset)

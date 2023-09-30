@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"github.com/foundriesio/fioctl/logger"
 	"io/fs"
 	"os"
 	"strings"

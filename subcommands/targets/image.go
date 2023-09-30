@@ -2,6 +2,7 @@ package targets
 
 import (
 	"fmt"
+	"github.com/foundriesio/fioctl/logger"
 	"os"
 	"regexp"
 

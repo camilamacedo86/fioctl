@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/foundriesio/fioctl/logger"
 	"io/fs"
 	"os"
 	"os/exec"

@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/foundriesio/fioctl/client"
+	"github.com/foundriesio/fioctl/logger"
 	"github.com/foundriesio/fioctl/subcommands"
 )
 

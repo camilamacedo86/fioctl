@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/foundriesio/fioctl/logger"
 	"os"
 	"path/filepath"
 	"sort"

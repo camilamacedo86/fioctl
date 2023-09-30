@@ -3,6 +3,7 @@ package subcommands
 import (
 	"bytes"
 	"fmt"
+	"github.com/foundriesio/fioctl/logger"
 	"io"
 	"os"
 	"path/filepath"
