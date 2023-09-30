@@ -17,8 +17,8 @@ import (
 	"time"
 
 	"github.com/fatih/color"
+	"github.com/foundriesio/fioctl/logger"
 	"github.com/sirupsen/logrus"
-	tuf "github.com/theupdateframework/notary/tuf/data"
 )
 
 type Config struct {
