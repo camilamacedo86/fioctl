@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/foundriesio/fioctl/logger"
 	"io"
 	"net/http"
 	"os"
@@ -17,8 +16,8 @@ import (
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/foundriesio/fioctl/logger"
 	"github.com/sirupsen/logrus"
+	tuf "github.com/theupdateframework/notary/tuf/data"
 )
 
 type Config struct {
@@ -512,7 +511,7 @@ func (d Device) Online(inactiveHoursThreshold int) bool {
 			return false
 		}
 	} else {
-		logger.Log(logger.Error, err)
+		logrus.Error(err)
 		return false
 	}
 	return true
@@ -535,7 +534,7 @@ func NewApiClient(serverUrl string, config Config, caCertPath string, version st
 		}
 
 		if ok := rootCAs.AppendCertsFromPEM(certs); !ok {
-			logger.Log(logger.Warning, "No certs appended, using system certs only")
+			logrus.Warning("No certs appended, using system certs only")
 		}
 		tlsCfg.RootCAs = rootCAs
 	}
