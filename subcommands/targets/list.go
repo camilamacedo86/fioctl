@@ -191,7 +191,7 @@ func doList(cmd *cobra.Command, args []string) {
 	var cols = make([]interface{}, len(showColumns))
 	for idx, c := range showColumns {
 		if _, ok := Columns[c]; !ok {
-			logrus.Error("ERROR: Invalid column name:", c)
+			logger.Log(logger.Error, "ERROR: Invalid column name:", c)
 			os.Exit(1)
 		}
 		cols[idx] = strings.ToUpper(c)

@@ -69,7 +69,7 @@ func doLogin(cmd *cobra.Command, args []string) {
 	}
 
 	if creds.Config.ClientId == "" || creds.Config.ClientSecret == "" {
-		logrus.Error("Cannot execute login without client ID or client secret.")
+		logger.Log(logger.Error, "Cannot execute login without client ID or client secret.")
 		os.Exit(1)
 	}
 
@@ -106,7 +106,7 @@ func promptForCreds(credsUrl string) (string, string) {
 	clientSecret := strings.Trim(scanner.Text(), " ")
 
 	if clientId == "" || clientSecret == "" {
-		logrus.Error("ERROR: Client ID and client credentials are both required.")
+		logger.Log(logger.Error, "ERROR: Client ID and client credentials are both required.")
 		os.Exit(1)
 	}
 

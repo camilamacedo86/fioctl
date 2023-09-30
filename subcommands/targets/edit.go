@@ -41,16 +41,16 @@ func doEdit(cmd *cobra.Command, args []string) {
 	// Create temp file to edit with
 	tmpfile, err := os.CreateTemp("", "targets.*.json")
 	if err != nil {
-		logrus.Error("Unable to create tempfile: ", err)
+		logger.Log(logger.Error, "Unable to create tempfile: ", err)
 		os.Exit(1)
 	}
 	defer os.Remove(tmpfile.Name())
 	if _, err := tmpfile.Write(orig); err != nil {
-		logrus.Error("Unable to write tempfile: ", err)
+		logger.Log(logger.Error, "Unable to write tempfile: ", err)
 		os.Exit(1)
 	}
 	if err := tmpfile.Close(); err != nil {
-		logrus.Error("Unable to close tempfile: ", err)
+		logger.Log(logger.Error, "Unable to close tempfile: ", err)
 		os.Exit(1)
 	}
 
@@ -72,7 +72,7 @@ func doEdit(cmd *cobra.Command, args []string) {
 	// Read it and see if its changed
 	content, err := os.ReadFile(tmpfile.Name())
 	if err != nil {
-		logrus.Error("ERROR: Unable to re-read tempfile:", err)
+		logger.Log(logger.Error, "ERROR: Unable to re-read tempfile:", err)
 	}
 	if bytes.Equal(content, orig) {
 		fmt.Println("No changes found, exiting.")
@@ -83,7 +83,7 @@ func doEdit(cmd *cobra.Command, args []string) {
 	var newTargets tuf.Files
 	err = json.Unmarshal(content, &newTargets)
 	if err != nil {
-		logrus.Error("Unable to parse new targets: ", err)
+		logger.Log(logger.Error, "Unable to parse new targets: ", err)
 		os.Exit(1)
 	}
 	type TargetsUp struct {
@@ -92,7 +92,7 @@ func doEdit(cmd *cobra.Command, args []string) {
 	upload := TargetsUp{newTargets}
 	content, err = json.Marshal(upload)
 	if err != nil {
-		logrus.Error("Unable to marshall targets data: ", err)
+		logger.Log(logger.Error, "Unable to marshall targets data: ", err)
 		os.Exit(1)
 	}
 

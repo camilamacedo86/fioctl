@@ -164,7 +164,7 @@ func doShowComposeApp(cmd *cobra.Command, args []string) {
 	for name, custom := range targets {
 		_, ok := custom.ComposeApps[appName]
 		if !ok {
-			logrus.Error("ERROR: App not found in target")
+			logger.Log(logger.Error, "ERROR: App not found in target")
 			os.Exit(1)
 		}
 		appInfo, err := api.TargetComposeApp(factory, name, appName)
@@ -172,7 +172,7 @@ func doShowComposeApp(cmd *cobra.Command, args []string) {
 
 		fmt.Println("Version:\n\t", appInfo.Uri)
 		if len(appInfo.Error) > 0 {
-			logrus.Error("Error:\n\t", appInfo.Error)
+			logger.Log(logger.Error, "Error:\n\t", appInfo.Error)
 		}
 		if appInfo.Warnings != nil {
 			logger.Log(logger.Warning, "Warnings:")
@@ -265,7 +265,7 @@ func getTargets(factory string, prodTag string, version string) ([]string, map[s
 		names = append(names, name)
 	}
 	if len(matches) == 0 {
-		logrus.Error("ERROR: no target found for this version")
+		logger.Log(logger.Error, "ERROR: no target found for this version")
 		os.Exit(1)
 	}
 	sort.Strings(names)

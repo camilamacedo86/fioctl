@@ -54,7 +54,7 @@ func (w *WireguardClientConfig) Unmarshall(configVal string) {
 		} else if k == "pubkey" {
 			w.PublicKey = strings.TrimSpace(parts[1])
 		} else {
-			logrus.Error("ERROR: Unexpected client config key: ", k)
+			logger.Log(logger.Error, "ERROR: Unexpected client config key: ", k)
 			os.Exit(1)
 		}
 	}
@@ -105,13 +105,13 @@ func factoryIps(factory string) map[uint32]bool {
 func findVpnAddress(factory string) string {
 	wsc := config.LoadWireguardServerConfig(factory, api)
 	if len(wsc.VpnAddress) == 0 || !wsc.Enabled {
-		logrus.Error("ERROR: A wireguard server has not been configured for this factory")
+		logger.Log(logger.Error, "ERROR: A wireguard server has not been configured for this factory")
 		os.Exit(1)
 	}
 	logrus.Debugf("VPN server address is: %s", wsc.VpnAddress)
 	serverIp, err := ipToUint32(wsc.VpnAddress)
 	if err != nil {
-		logrus.Error("ERROR: Wireguard server has an invalid IP Address: ", wsc.VpnAddress)
+		logger.Log(logger.Error, "ERROR: Wireguard server has an invalid IP Address: ", wsc.VpnAddress)
 		os.Exit(1)
 	}
 
@@ -123,7 +123,7 @@ func findVpnAddress(factory string) string {
 		}
 	}
 
-	logrus.Error("ERROR: Unable to find unique IP address for VPN")
+	logger.Log(logger.Error, "ERROR: Unable to find unique IP address for VPN")
 	os.Exit(1)
 	return ""
 }
@@ -161,7 +161,7 @@ func doConfigWireguard(cmd *cobra.Command, args []string) {
 
 	if args[1] == "enable" {
 		if len(wcc.PublicKey) == 0 {
-			logrus.Error("ERROR: Device has no public key for VPN")
+			logger.Log(logger.Error, "ERROR: Device has no public key for VPN")
 			os.Exit(1)
 		}
 		wcc.Enabled = true

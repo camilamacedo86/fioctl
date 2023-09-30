@@ -129,7 +129,7 @@ func RunCredsHelper() int {
 	if subcommands.Config.ClientCredentials.ClientSecret == "" {
 		msg := "ERROR: Your fioctl configuration does not appear to include oauth2 credentials. Please run `fioctl login` to configure and then try again.\n"
 		os.Stderr.WriteString(msg)
-		logrus.Error(msg)
+		logger.Log(logger.Error, msg)
 		os.Exit(1)
 	}
 	subcommands.Login(NewCommand()) // Ensure a fresh oauth2 access token

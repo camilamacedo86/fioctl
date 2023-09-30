@@ -84,7 +84,7 @@ func doTag(cmd *cobra.Command, args []string) {
 			}
 		}
 		if len(updates) == 0 {
-			logrus.Error("ERROR: no targets found matching the given versions")
+			logger.Log(logger.Error, "ERROR: no targets found matching the given versions")
 			os.Exit(1)
 		}
 	} else {

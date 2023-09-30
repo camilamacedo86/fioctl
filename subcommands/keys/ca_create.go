@@ -84,7 +84,7 @@ func doCreateCA(cmd *cobra.Command, args []string) {
 
 	if len(hsmModule) > 0 {
 		if len(hsmPin) == 0 {
-			logrus.Error("ERROR: --hsm-pin is required with --hsm-module")
+			logger.Log(logger.Error, "ERROR: --hsm-pin is required with --hsm-module")
 			os.Exit(1)
 		}
 		os.Setenv("HSM_MODULE", hsmModule)

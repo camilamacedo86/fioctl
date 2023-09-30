@@ -511,7 +511,7 @@ func (d Device) Online(inactiveHoursThreshold int) bool {
 			return false
 		}
 	} else {
-		logrus.Error(err)
+		logger.Log(logger.Error, err)
 		return false
 	}
 	return true

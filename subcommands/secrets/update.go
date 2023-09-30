@@ -41,7 +41,7 @@ func doUpdate(cmd *cobra.Command, args []string) {
 	for i, arg := range args {
 		parts := strings.SplitN(arg, "=", 2)
 		if len(parts) != 2 {
-			logrus.Error("ERROR: Invalid key=value argument: ", arg)
+			logger.Log(logger.Error, "ERROR: Invalid key=value argument: ", arg)
 			os.Exit(1)
 		}
 		secrets[i].Name = parts[0]
@@ -66,7 +66,7 @@ func doUpdate(cmd *cobra.Command, args []string) {
 	} else if len(triggers) == 1 {
 		pt = triggers[0]
 	} else {
-		logrus.Error("ERROR: Factory configuration issue. Factory has unexpected number of triggers.")
+		logger.Log(logger.Error, "ERROR: Factory configuration issue. Factory has unexpected number of triggers.")
 		os.Exit(1)
 	}
 

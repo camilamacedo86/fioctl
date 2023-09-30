@@ -33,7 +33,7 @@ func doList(cmd *cobra.Command, args []string) {
 			t.AddLine(secret.Name)
 		}
 	} else if len(triggers) != 0 {
-		logrus.Error("ERROR: Factory configuration issue. Factory has unexpected number of triggers.")
+		logger.Log(logger.Error, "ERROR: Factory configuration issue. Factory has unexpected number of triggers.")
 		os.Exit(1)
 	}
 	t.Print()
