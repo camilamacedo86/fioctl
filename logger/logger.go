@@ -19,7 +19,7 @@ const (
 	Error
 )
 
-func Print(level Level, message string) {
+func Log(level Level, message string) {
 	switch level {
 	case Info:
 		fmt.Println(blue + message + reset)
