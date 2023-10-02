@@ -45,12 +45,6 @@ jobs:
             binary: fioctl-darwin-amd64
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Set up QEMU
-        if: matrix.qemu
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: ${{ matrix.qemu-platform }}
-
       - name: Download Binaries
         uses: actions/download-artifact@v2
         with:
@@ -62,5 +56,5 @@ jobs:
         run: chmod +x ./bin/${{ matrix.binary }}
 
       - name: Verify binary
-        run: ./bin/${{ matrix.binary }} logout
+        run: ./bin/${{ matrix.binary }} help
         shell: bash
