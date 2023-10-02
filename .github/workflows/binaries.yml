@@ -51,11 +51,6 @@ jobs:
         with:
           platforms: ${{ matrix.qemu-platform }}
 
-      - name: Install QEMU user static
-        if: matrix.qemu
-        run: sudo apt-get update && sudo apt-get install -y qemu-user-static
-        shell: bash
-
       - name: Download Binaries
         uses: actions/download-artifact@v2
         with:
@@ -67,10 +62,5 @@ jobs:
         run: chmod +x ./bin/${{ matrix.binary }}
 
       - name: Verify binary
-        run: |
-          if [[ "${{ matrix.qemu }}" == "true" ]]; then
-            qemu-${{ matrix.qemu-platform }}-static ./bin/${{ matrix.binary }} help
-          else
-            ./bin/${{ matrix.binary }} help
-          fi
+        run: ./bin/${{ matrix.binary }} help
         shell: bash
