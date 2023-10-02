@@ -62,5 +62,5 @@ jobs:
         run: chmod +x ./bin/${{ matrix.binary }}
 
       - name: Verify binary
-        run: ./bin/${{ matrix.binary }} help
+        run: ./bin/${{ matrix.binary }} logout
         shell: bash
